@@ -27,3 +27,21 @@ export const createStudent = async (req, res) => {
     });
   }
 };
+
+export const getAllStudents = async (req, res) => {
+  try {
+    const students = await Student.find({});
+
+    return res.status(STATUS_CODES.OK).json({
+      success: true,
+      message: "All Students fetched Successfully",
+      data: students,
+    });
+  } catch (error) {
+    console.log(error, "getAllStudents Error");
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: `Error in getAllStudents: ${error}`,
+    });
+  }
+};
