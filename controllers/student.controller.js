@@ -94,3 +94,49 @@ export const getStudentById = async (req, res) => {
     );
   }
 };
+
+export const updateStudent = async (req, res) => {
+  try {
+    const { name, age, email, studentClass, address, phone } = req.body;
+    const { studentId } = req.params;
+
+    const existingStudent = await Student.findById(studentId);
+
+    if (!existingStudent) {
+      return Response(
+        res,
+        STATUS_CODES.NOT_FOUND,
+        false,
+        "Student Not Found",
+        null,
+      );
+    }
+
+    if (name) existingStudent.name = name;
+    if (age) existingStudent.age = age;
+    if (email) existingStudent.email = email;
+    if (studentClass) existingStudent.studentClass = studentClass;
+    if (address) existingStudent.address = address;
+    if (phone) existingStudent.phone = phone;
+
+    await existingStudent.save();
+
+    return Response(
+      res,
+      STATUS_CODES.OK,
+      true,
+      "Student updated Successfully",
+      existingStudent,
+    );
+  } catch (error) {
+    console.log(error, "updateStudent Error");
+
+    return Response(
+      res,
+      STATUS_CODES.INTERNAL_SERVER_ERROR,
+      false,
+      `Error in updateStudent: ${error}`,
+      null,
+    );
+  }
+};
