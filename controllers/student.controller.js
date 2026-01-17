@@ -140,3 +140,41 @@ export const updateStudent = async (req, res) => {
     );
   }
 };
+
+export const deleteStudent = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+
+    const existingStudent = await Student.findById(studentId);
+
+    if (!existingStudent) {
+      return Response(
+        res,
+        STATUS_CODES.NOT_FOUND,
+        false,
+        "Student Not Found",
+        null,
+      );
+    }
+
+    await existingStudent.deleteOne();
+
+    return Response(
+      res,
+      STATUS_CODES.OK,
+      true,
+      "Student deleted Successfully",
+      null,
+    );
+  } catch (error) {
+    console.log(error, "deleteStudent Error");
+
+    return Response(
+      res,
+      STATUS_CODES.INTERNAL_SERVER_ERROR,
+      false,
+      `Error in deleteStudent: ${error}`,
+      null,
+    );
+  }
+};
